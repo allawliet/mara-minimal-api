@@ -1,0 +1,12 @@
+C:\Users\mnsya\Documents\AFreelance\MARA\mara.ServiceDefaults\bin\Debug\net8.0\mara.ServiceDefaults.deps.json
+C:\Users\mnsya\Documents\AFreelance\MARA\mara.ServiceDefaults\bin\Debug\net8.0\mara.ServiceDefaults.dll
+C:\Users\mnsya\Documents\AFreelance\MARA\mara.ServiceDefaults\bin\Debug\net8.0\mara.ServiceDefaults.pdb
+C:\Users\mnsya\Documents\AFreelance\MARA\mara.ServiceDefaults\obj\Debug\net8.0\mara.ServiceDefaults.csproj.AssemblyReference.cache
+C:\Users\mnsya\Documents\AFreelance\MARA\mara.ServiceDefaults\obj\Debug\net8.0\mara.ServiceDefaults.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\mnsya\Documents\AFreelance\MARA\mara.ServiceDefaults\obj\Debug\net8.0\mara.ServiceDefaults.AssemblyInfoInputs.cache
+C:\Users\mnsya\Documents\AFreelance\MARA\mara.ServiceDefaults\obj\Debug\net8.0\mara.ServiceDefaults.AssemblyInfo.cs
+C:\Users\mnsya\Documents\AFreelance\MARA\mara.ServiceDefaults\obj\Debug\net8.0\mara.ServiceDefaults.csproj.CoreCompileInputs.cache
+C:\Users\mnsya\Documents\AFreelance\MARA\mara.ServiceDefaults\obj\Debug\net8.0\mara.ServiceDefaults.dll
+C:\Users\mnsya\Documents\AFreelance\MARA\mara.ServiceDefaults\obj\Debug\net8.0\refint\mara.ServiceDefaults.dll
+C:\Users\mnsya\Documents\AFreelance\MARA\mara.ServiceDefaults\obj\Debug\net8.0\mara.ServiceDefaults.pdb
+C:\Users\mnsya\Documents\AFreelance\MARA\mara.ServiceDefaults\obj\Debug\net8.0\ref\mara.ServiceDefaults.dll

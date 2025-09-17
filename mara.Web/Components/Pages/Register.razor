@@ -1,0 +1,384 @@
+@page "/register"
+@layout AuthLayout
+@using mara.Web.Services
+@using System.ComponentModel.DataAnnotations
+@inject IAuthenticationService AuthService
+@inject NavigationManager Navigation
+
+<PageTitle>Register - MARA</PageTitle>
+
+<div class="register-container">
+    <div class="register-card">
+        <div class="register-header">
+            <h2>Create Account</h2>
+            <p>Join MARA today</p>
+        </div>
+
+        <EditForm Model="@registerRequest" OnValidSubmit="@HandleRegister" FormName="RegisterForm" class="register-form">
+            <DataAnnotationsValidator />
+            
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="alert alert-danger" role="alert">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    @errorMessage
+                </div>
+            }
+
+            <div class="form-group">
+                <label for="username" class="form-label">
+                    <i class="fas fa-user"></i>
+                    Username
+                </label>
+                <InputText @bind-Value="registerRequest.Username" 
+                          class="form-control" 
+                          id="username" 
+                          placeholder="Choose a username"
+                          disabled="@isLoading" />
+                <ValidationMessage For="@(() => registerRequest.Username)" class="text-danger" />
+            </div>
+
+            <div class="form-group">
+                <label for="email" class="form-label">
+                    <i class="fas fa-envelope"></i>
+                    Email
+                </label>
+                <InputText @bind-Value="registerRequest.Email" 
+                          type="email"
+                          class="form-control" 
+                          id="email" 
+                          placeholder="Enter your email address"
+                          disabled="@isLoading" />
+                <ValidationMessage For="@(() => registerRequest.Email)" class="text-danger" />
+            </div>
+
+            <div class="form-group">
+                <label for="password" class="form-label">
+                    <i class="fas fa-lock"></i>
+                    Password
+                </label>
+                <div class="password-input-container">
+                    <InputText @bind-Value="registerRequest.Password" 
+                              type="@(showPassword ? "text" : "password")" 
+                              class="form-control" 
+                              id="password" 
+                              placeholder="Create a strong password"
+                              disabled="@isLoading" />
+                    <button type="button" 
+                            class="password-toggle-btn" 
+                            @onclick="() => showPassword = !showPassword"
+                            disabled="@isLoading">
+                        <i class="fas @(showPassword ? "fa-eye-slash" : "fa-eye")"></i>
+                    </button>
+                </div>
+                <ValidationMessage For="@(() => registerRequest.Password)" class="text-danger" />
+                <div class="password-requirements">
+                    <small class="text-muted">
+                        Password must contain uppercase, lowercase, number, and special character
+                    </small>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPassword" class="form-label">
+                    <i class="fas fa-lock"></i>
+                    Confirm Password
+                </label>
+                <div class="password-input-container">
+                    <InputText @bind-Value="registerRequest.ConfirmPassword" 
+                              type="@(showConfirmPassword ? "text" : "password")" 
+                              class="form-control" 
+                              id="confirmPassword" 
+                              placeholder="Confirm your password"
+                              disabled="@isLoading" />
+                    <button type="button" 
+                            class="password-toggle-btn" 
+                            @onclick="() => showConfirmPassword = !showConfirmPassword"
+                            disabled="@isLoading">
+                        <i class="fas @(showConfirmPassword ? "fa-eye-slash" : "fa-eye")"></i>
+                    </button>
+                </div>
+                <ValidationMessage For="@(() => registerRequest.ConfirmPassword)" class="text-danger" />
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" 
+                        class="btn btn-primary btn-register" 
+                        disabled="@isLoading">
+                    @if (isLoading)
+                    {
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        <span>Creating Account...</span>
+                    }
+                    else
+                    {
+                        <i class="fas fa-user-plus"></i>
+                        <span>Create Account</span>
+                    }
+                </button>
+            </div>
+        </EditForm>
+
+        <div class="register-footer">
+            <p>Already have an account? 
+                <a href="/login" class="login-link">Sign in here</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<style>
+    .register-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .register-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        padding: 40px;
+        width: 100%;
+        max-width: 500px;
+        animation: slideUp 0.6s ease-out;
+    }
+
+    @@keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .register-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .register-header h2 {
+        color: #333;
+        margin-bottom: 8px;
+        font-weight: 600;
+    }
+
+    .register-header p {
+        color: #666;
+        margin: 0;
+    }
+
+    .register-form {
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: 6px;
+        color: #333;
+        font-weight: 500;
+    }
+
+    .form-label i {
+        margin-right: 8px;
+        color: #667eea;
+        width: 16px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid #e1e5e9;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        background-color: #fff;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .form-control:disabled {
+        background-color: #f8f9fa;
+        opacity: 0.7;
+    }
+
+    .password-input-container {
+        position: relative;
+    }
+
+    .password-toggle-btn {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: #666;
+        cursor: pointer;
+        padding: 4px;
+        border-radius: 4px;
+        transition: color 0.3s ease;
+    }
+
+    .password-toggle-btn:hover:not(:disabled) {
+        color: #667eea;
+    }
+
+    .password-toggle-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .password-requirements {
+        margin-top: 4px;
+    }
+
+    .btn-register {
+        width: 100%;
+        padding: 14px;
+        font-size: 16px;
+        font-weight: 600;
+        border-radius: 8px;
+        border: none;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .btn-register:hover:not(:disabled) {
+        transform: translateY(-1px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-register:active:not(:disabled) {
+        transform: translateY(0);
+    }
+
+    .btn-register:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .alert {
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .alert-danger {
+        background-color: #fee;
+        border: 1px solid #fcc;
+        color: #c33;
+    }
+
+    .register-footer {
+        text-align: center;
+    }
+
+    .login-link {
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .login-link:hover {
+        text-decoration: underline;
+    }
+
+    .text-danger {
+        color: #dc3545;
+        font-size: 14px;
+        margin-top: 4px;
+    }
+
+    .text-muted {
+        color: #6c757d;
+    }
+
+    .spinner-border {
+        width: 1rem;
+        height: 1rem;
+        border-width: 2px;
+    }
+
+    @@media (max-width: 480px) {
+        .register-card {
+            padding: 30px 20px;
+            margin: 10px;
+        }
+    }
+</style>
+
+@code {
+    [SupplyParameterFromForm]
+    private RegisterRequest registerRequest { get; set; } = new();
+    
+    private bool isLoading = false;
+    private bool showPassword = false;
+    private bool showConfirmPassword = false;
+    private string errorMessage = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        // Check if user is already authenticated
+        var authState = AuthService.GetAuthenticationState();
+        if (authState.IsAuthenticated)
+        {
+            Navigation.NavigateTo("/");
+        }
+    }
+
+    private async Task HandleRegister()
+    {
+        if (isLoading) return;
+
+        isLoading = true;
+        errorMessage = string.Empty;
+        StateHasChanged();
+
+        try
+        {
+            var (success, message) = await AuthService.RegisterAsync(registerRequest);
+
+            if (success)
+            {
+                // Redirect to login page with success message
+                Navigation.NavigateTo("/?registered=true");
+            }
+            else
+            {
+                errorMessage = message;
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "An unexpected error occurred. Please try again.";
+        }
+        finally
+        {
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+}
