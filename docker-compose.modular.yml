@@ -1,0 +1,162 @@
+version: '3.8'
+
+services:
+  # API Gateway / Main Application
+  imas-gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:80"
+      - "5001:443"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ModuleCommunication__Mode=Distributed
+      - ModuleCommunication__ModuleEndpoints__authentication=http://imas-auth:80
+      - ModuleCommunication__ModuleEndpoints__todos=http://imas-todos:80
+      - ModuleCommunication__ModuleEndpoints__hr=http://imas-hr:80
+      - ModuleCommunication__ModuleEndpoints__assets=http://imas-assets:80
+      - ModuleCommunication__ModuleEndpoints__finance=http://imas-finance:80
+      - ModuleCommunication__ModuleEndpoints__general=http://imas-general:80
+      - ModuleCommunication__ModuleEndpoints__weather=http://imas-weather:80
+    depends_on:
+      - imas-db
+      - imas-auth
+      - imas-todos
+      - imas-hr
+      - imas-assets
+      - imas-finance
+      - imas-general
+      - imas-weather
+    networks:
+      - imas-network
+
+  # Authentication Module
+  imas-auth:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - MODULE_NAME=Authentication
+      - ModuleCommunication__Mode=Distributed
+    depends_on:
+      - imas-db
+    networks:
+      - imas-network
+
+  # Todos Module
+  imas-todos:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - MODULE_NAME=Todos
+      - ModuleCommunication__Mode=Distributed
+    depends_on:
+      - imas-db
+    networks:
+      - imas-network
+
+  # HR Module
+  imas-hr:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - MODULE_NAME=HR
+      - ModuleCommunication__Mode=Distributed
+    depends_on:
+      - imas-db
+    networks:
+      - imas-network
+
+  # Assets Module
+  imas-assets:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - MODULE_NAME=Assets
+      - ModuleCommunication__Mode=Distributed
+    depends_on:
+      - imas-db
+    networks:
+      - imas-network
+
+  # Finance Module
+  imas-finance:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - MODULE_NAME=Finance
+      - ModuleCommunication__Mode=Distributed
+    depends_on:
+      - imas-db
+    networks:
+      - imas-network
+
+  # General Module
+  imas-general:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - MODULE_NAME=General
+      - ModuleCommunication__Mode=Distributed
+    depends_on:
+      - imas-db
+    networks:
+      - imas-network
+
+  # Weather Module
+  imas-weather:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - MODULE_NAME=Weather
+      - ModuleCommunication__Mode=Distributed
+    depends_on:
+      - imas-db
+    networks:
+      - imas-network
+
+  # Database
+  imas-db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=YourStrong@Password123
+      - MSSQL_PID=Developer
+    ports:
+      - "1433:1433"
+    volumes:
+      - imas-db-data:/var/opt/mssql
+    networks:
+      - imas-network
+
+  # Redis for caching (optional)
+  imas-redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - imas-redis-data:/data
+    networks:
+      - imas-network
+
+networks:
+  imas-network:
+    driver: bridge
+
+volumes:
+  imas-db-data:
+  imas-redis-data:

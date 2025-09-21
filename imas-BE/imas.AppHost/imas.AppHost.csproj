@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsAspireHost>true</IsAspireHost>
+    <UserSecretsId>fcaca811-ea19-4350-baf0-889b79e75484</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\imas.ApiService\imas.ApiService.csproj" />
+    <ProjectReference Include="..\..\imas-FE\imas.Web\imas.Web.csproj" />
+    <ProjectReference Include="..\imas.HR.ApiService\imas.HR.ApiService.csproj" />
+    <ProjectReference Include="..\imas.Assets.ApiService\imas.Assets.ApiService.csproj" />
+    <ProjectReference Include="..\imas.Finance.ApiService\imas.Finance.ApiService.csproj" />
+    <ProjectReference Include="..\imas.General.ApiService\imas.General.ApiService.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.AppHost" Version="8.2.2" />
+    <PackageReference Include="Aspire.Hosting.SqlServer" Version="8.2.2" />
+  </ItemGroup>
+
+</Project>

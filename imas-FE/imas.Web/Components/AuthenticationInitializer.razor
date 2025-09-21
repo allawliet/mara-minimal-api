@@ -1,0 +1,31 @@
+@using imas.Web.Services
+@inject IEnhancedAuthenticationService AuthService
+@implements IDisposable
+
+@* This component initializes authentication after JavaScript is available *@
+
+@code {
+    private bool _initialized = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !_initialized)
+        {
+            try
+            {
+                await AuthService.InitializeAsync();
+                _initialized = true;
+                StateHasChanged();
+            }
+            catch (Exception)
+            {
+                // Handle initialization errors silently during prerendering
+            }
+        }
+    }
+
+    public void Dispose()
+    {
+        // No cleanup needed
+    }
+}
