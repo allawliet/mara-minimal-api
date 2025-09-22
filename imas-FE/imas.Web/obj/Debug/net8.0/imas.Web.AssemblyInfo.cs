@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("imas.Web")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+088c34e7808faf23a7af6098c0e24439e4a68ba8")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6f5bf8bd256b0485e85e2d92164931d8d664726d")]
 [assembly: System.Reflection.AssemblyProductAttribute("imas.Web")]
 [assembly: System.Reflection.AssemblyTitleAttribute("imas.Web")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

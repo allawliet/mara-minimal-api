@@ -1,0 +1,142 @@
+@page "/login"
+@page "/"
+@layout EmptyLayout
+@inject NavigationManager Navigation
+@inject imas.Web3.Services.AuthenticationService AuthService
+@inject MudBlazor.ISnackbar Snackbar
+
+<div style="display: flex; height: 100vh; width: 100vw; font-family: 'Roboto', sans-serif;">
+    <!-- Left Side - Background Image -->
+    <div style="flex: 1; background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #06b6d4 100%); position: relative; background-image: url('images/background-login.png'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(30, 58, 138, 0.3);"></div>
+    </div>
+    
+    <!-- Right Side - Login Form -->
+    <div style="flex: 0 0 400px; background: white; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 40px; box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);">
+        <!-- IMAS Logo and Title -->
+        <div style="text-align: center; margin-bottom: 30px;">
+            <div style="font-size: 24px; font-weight: 700; color: #1e3a8a; margin-bottom: 5px;">IMAS</div>
+            <div style="font-size: 14px; color: #64748b; margin-bottom: 30px;">MARAs ERP System</div>
+        </div>
+        
+        <!-- Login Form -->
+        <form style="width: 100%; max-width: 320px;" @onsubmit:preventDefault="true" @onsubmit="HandleLogin">
+            <div style="margin-bottom: 20px;">
+                <label style="font-size: 14px; color: #374151; margin-bottom: 8px; display: block; font-weight: 500;">Nama Pengguna</label>
+                <input @bind="username" type="text" required style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; box-sizing: border-box;" />
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <label style="font-size: 14px; color: #374151; margin-bottom: 8px; display: block; font-weight: 500;">Kata Laluan</label>
+                <input @bind="password" type="password" required style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; box-sizing: border-box;" />
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; margin-bottom: 20px; font-size: 12px;">
+                <a href="#" style="color: #3b82f6; text-decoration: none;">Daftar Pengguna</a>
+                <a href="#" style="color: #3b82f6; text-decoration: none;">Lupa Kata Laluan</a>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <label style="display: flex; align-items: center; font-size: 14px;">
+                    <input @bind="isNotRobot" type="checkbox" style="margin-right: 8px;" />
+                    I'm not a robot
+                </label>
+            </div>
+            
+            <button type="submit" disabled="@isLoggingIn" style="width: 100%; height: 45px; background: #1e3a8a; border: none; border-radius: 6px; color: white; font-weight: 500; cursor: pointer; font-size: 14px; opacity: @(isLoggingIn ? "0.7" : "1");">
+                @if (isLoggingIn)
+                {
+                    <span>Log Masuk...</span>
+                }
+                else
+                {
+                    <span>Log Masuk</span>
+                }
+            </button>
+            
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div style="margin-top: 15px; padding: 10px; background: #fee2e2; border: 1px solid #fecaca; border-radius: 6px; color: #dc2626; font-size: 12px;">
+                    @errorMessage
+                </div>
+            }
+        </form>
+    </div>
+</div>
+
+@code {
+    private string username = "";
+    private string password = "";
+    private bool isNotRobot = false;
+    private bool isLoggingIn = false;
+    private string errorMessage = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Initialize authentication service first
+        await AuthService.InitializeAsync();
+        
+        // If user is already authenticated, redirect to dashboard
+        if (AuthService.IsAuthenticated)
+        {
+            Navigation.NavigateTo("/home");
+        }
+    }
+
+    private async Task HandleLogin()
+    {
+        errorMessage = "";
+        
+        if (!isNotRobot)
+        {
+            errorMessage = "Please verify that you are not a robot";
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+        {
+            errorMessage = "Please enter both username and password";
+            return;
+        }
+
+        isLoggingIn = true;
+        StateHasChanged();
+        
+        try
+        {
+            // Use the authentication service to login
+            bool loginSuccess = await AuthService.LoginAsync(username, password);
+            
+            Console.WriteLine($"Login attempt - Success: {loginSuccess}");
+            Console.WriteLine($"Auth state after login - IsAuthenticated: {AuthService.IsAuthenticated}");
+            Console.WriteLine($"Auth state after login - CurrentUser: {AuthService.CurrentUser?.Identity?.Name}");
+            
+            if (loginSuccess)
+            {
+                Snackbar.Add($"Welcome, {username}!", Severity.Success);
+                    
+                // Small delay to show the success message
+                await Task.Delay(1000);
+                
+                // Force refresh authentication state before navigation
+                StateHasChanged();
+                
+                Console.WriteLine("Navigating to /home");
+                Navigation.NavigateTo("/home", forceLoad: true);
+            }
+            else
+            {
+                errorMessage = "Invalid username or password";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Login failed: {ex.Message}";
+        }
+        finally
+        {
+            isLoggingIn = false;
+            StateHasChanged();
+        }
+    }
+}

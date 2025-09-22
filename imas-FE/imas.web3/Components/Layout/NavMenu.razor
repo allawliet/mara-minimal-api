@@ -1,0 +1,28 @@
+﻿@namespace imas.Web3
+@using MudBlazor
+
+<MudNavMenu>
+    <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
+    <MudNavLink Href="counter" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Add">Counter</MudNavLink>
+    <MudNavLink Href="weather" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Weather</MudNavLink>
+    <MudNavLink Href="login" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Login">Login</MudNavLink>
+    
+    <MudDivider Class="my-2" />
+    
+    <MudNavGroup Text="IMAS Modules" Icon="@Icons.Material.Filled.Business" Expanded="false">
+        <MudNavLink Href="/hr" Icon="@Icons.Material.Filled.People">Human Resources</MudNavLink>
+        <MudNavLink Href="/finance" Icon="@Icons.Material.Filled.AccountBalance">Finance</MudNavLink>
+        <MudNavLink Href="/assets" Icon="@Icons.Material.Filled.Inventory">Assets</MudNavLink>
+        <MudNavLink Href="/general" Icon="@Icons.Material.Filled.Business">General</MudNavLink>
+    </MudNavGroup>
+    
+    <MudNavGroup Text="Reports" Icon="@Icons.Material.Filled.Assessment" Expanded="false">
+        <MudNavLink Href="/reports/analytics" Icon="@Icons.Material.Filled.Analytics">Analytics</MudNavLink>
+        <MudNavLink Href="/reports/financial" Icon="@Icons.Material.Filled.TrendingUp">Financial Reports</MudNavLink>
+    </MudNavGroup>
+    
+    <MudNavGroup Text="Settings" Icon="@Icons.Material.Filled.Settings" Expanded="false">
+        <MudNavLink Href="/settings/profile" Icon="@Icons.Material.Filled.Person">Profile</MudNavLink>
+        <MudNavLink Href="/settings/preferences" Icon="@Icons.Material.Filled.Tune">Preferences</MudNavLink>
+    </MudNavGroup>
+</MudNavMenu>

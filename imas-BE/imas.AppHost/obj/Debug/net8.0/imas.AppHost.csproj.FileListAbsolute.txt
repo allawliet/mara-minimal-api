@@ -146,7 +146,6 @@ C:\Users\mnsya\Documents\AFreelance\MARA\imas-BE\imas.AppHost\obj\Debug\net8.0\i
 C:\Users\mnsya\Documents\AFreelance\MARA\imas-BE\imas.AppHost\obj\Debug\net8.0\imas.AppHost.AssemblyInfo.cs
 C:\Users\mnsya\Documents\AFreelance\MARA\imas-BE\imas.AppHost\obj\Debug\net8.0\imas.AppHost.csproj.CoreCompileInputs.cache
 C:\Users\mnsya\Documents\AFreelance\MARA\imas-BE\imas.AppHost\obj\Debug\net8.0\Aspire\references\imas_ApiService.ProjectMetadata.g.cs
-C:\Users\mnsya\Documents\AFreelance\MARA\imas-BE\imas.AppHost\obj\Debug\net8.0\Aspire\references\imas_Web.ProjectMetadata.g.cs
 C:\Users\mnsya\Documents\AFreelance\MARA\imas-BE\imas.AppHost\obj\Debug\net8.0\Aspire\references\imas_HR_ApiService.ProjectMetadata.g.cs
 C:\Users\mnsya\Documents\AFreelance\MARA\imas-BE\imas.AppHost\obj\Debug\net8.0\Aspire\references\imas_Assets_ApiService.ProjectMetadata.g.cs
 C:\Users\mnsya\Documents\AFreelance\MARA\imas-BE\imas.AppHost\obj\Debug\net8.0\Aspire\references\imas_Finance_ApiService.ProjectMetadata.g.cs
@@ -156,3 +155,4 @@ C:\Users\mnsya\Documents\AFreelance\MARA\imas-BE\imas.AppHost\obj\Debug\net8.0\i
 C:\Users\mnsya\Documents\AFreelance\MARA\imas-BE\imas.AppHost\obj\Debug\net8.0\imas.App.AE8C3731.Up2Date
 C:\Users\mnsya\Documents\AFreelance\MARA\imas-BE\imas.AppHost\obj\Debug\net8.0\imas.AppHost.genruntimeconfig.cache
 C:\Users\mnsya\Documents\AFreelance\MARA\imas-BE\imas.AppHost\obj\Debug\net8.0\ref\imas.AppHost.dll
+C:\Users\mnsya\Documents\AFreelance\MARA\imas-BE\imas.AppHost\obj\Debug\net8.0\Aspire\references\imas_web3.ProjectMetadata.g.cs

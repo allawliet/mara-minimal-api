@@ -1,0 +1,182 @@
+@page "/dashboard"
+@namespace imas.Web3
+@implements IDisposable
+
+@using Microsoft.AspNetCore.Components
+@using MudBlazor
+@using System.Security.Claims
+@inject AuthenticationService AuthService
+@inject NavigationManager Navigation
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-4">
+    @if (AuthService.IsAuthenticated)
+    {
+        <MudGrid>
+            <MudItem xs="12">
+                <MudText Typo="Typo.h4" GutterBottom="true">
+                    Welcome to IMAS ERP System
+                </MudText>
+                <MudText Typo="Typo.subtitle1" Color="Color.Secondary">
+                    Hello, @(AuthService.CurrentUser?.Identity?.Name ?? "User")! Here's your dashboard overview.
+                </MudText>
+            </MudItem>
+
+            <!-- Quick Stats Cards -->
+            <MudItem xs="12" sm="6" md="3">
+                <MudCard>
+                    <MudCardContent>
+                        <div class="d-flex align-center">
+                            <MudIcon Icon="@Icons.Material.Filled.People" Color="Color.Primary" Size="Size.Large" Class="mr-3" />
+                            <div>
+                                <MudText Typo="Typo.h6">HR Module</MudText>
+                                <MudText Typo="Typo.body2" Color="Color.Secondary">Employee Management</MudText>
+                            </div>
+                        </div>
+                    </MudCardContent>
+                </MudCard>
+            </MudItem>
+
+            <MudItem xs="12" sm="6" md="3">
+                <MudCard>
+                    <MudCardContent>
+                        <div class="d-flex align-center">
+                            <MudIcon Icon="@Icons.Material.Filled.AccountBalance" Color="Color.Success" Size="Size.Large" Class="mr-3" />
+                            <div>
+                                <MudText Typo="Typo.h6">Finance</MudText>
+                                <MudText Typo="Typo.body2" Color="Color.Secondary">Financial Management</MudText>
+                            </div>
+                        </div>
+                    </MudCardContent>
+                </MudCard>
+            </MudItem>
+
+            <MudItem xs="12" sm="6" md="3">
+                <MudCard>
+                    <MudCardContent>
+                        <div class="d-flex align-center">
+                            <MudIcon Icon="@Icons.Material.Filled.Inventory" Color="Color.Warning" Size="Size.Large" Class="mr-3" />
+                            <div>
+                                <MudText Typo="Typo.h6">Assets</MudText>
+                                <MudText Typo="Typo.body2" Color="Color.Secondary">Asset Management</MudText>
+                            </div>
+                        </div>
+                    </MudCardContent>
+                </MudCard>
+            </MudItem>
+
+            <MudItem xs="12" sm="6" md="3">
+                <MudCard>
+                    <MudCardContent>
+                        <div class="d-flex align-center">
+                            <MudIcon Icon="@Icons.Material.Filled.Settings" Color="Color.Info" Size="Size.Large" Class="mr-3" />
+                            <div>
+                                <MudText Typo="Typo.h6">General</MudText>
+                                <MudText Typo="Typo.body2" Color="Color.Secondary">System Configuration</MudText>
+                            </div>
+                        </div>
+                    </MudCardContent>
+                </MudCard>
+            </MudItem>
+
+            <!-- Recent Activities -->
+            <MudItem xs="12" md="8">
+                <MudCard>
+                    <MudCardHeader>
+                        <CardHeaderContent>
+                            <MudText Typo="Typo.h6">Recent Activities</MudText>
+                        </CardHeaderContent>
+                    </MudCardHeader>
+                    <MudCardContent>
+                        <MudList T="string">
+                            <MudListItem T="string" Icon="@Icons.Material.Filled.PersonAdd" Text="New employee onboarded" />
+                            <MudListItem T="string" Icon="@Icons.Material.Filled.Receipt" Text="Invoice #INV-2024-001 processed" />
+                            <MudListItem T="string" Icon="@Icons.Material.Filled.Update" Text="Asset maintenance scheduled" />
+                            <MudListItem T="string" Icon="@Icons.Material.Filled.Settings" Text="System configuration updated" />
+                        </MudList>
+                    </MudCardContent>
+                </MudCard>
+            </MudItem>
+
+            <!-- Quick Actions -->
+            <MudItem xs="12" md="4">
+                <MudCard>
+                    <MudCardHeader>
+                        <CardHeaderContent>
+                            <MudText Typo="Typo.h6">Quick Actions</MudText>
+                        </CardHeaderContent>
+                    </MudCardHeader>
+                    <MudCardContent>
+                        <MudStack>
+                            <MudButton Variant="Variant.Filled" 
+                                     Color="Color.Primary" 
+                                     StartIcon="@Icons.Material.Filled.PersonAdd"
+                                     FullWidth="true">
+                                Add Employee
+                            </MudButton>
+                            <MudButton Variant="Variant.Filled" 
+                                     Color="Color.Success" 
+                                     StartIcon="@Icons.Material.Filled.Receipt"
+                                     FullWidth="true">
+                                Create Invoice
+                            </MudButton>
+                            <MudButton Variant="Variant.Filled" 
+                                     Color="Color.Warning" 
+                                     StartIcon="@Icons.Material.Filled.Add"
+                                     FullWidth="true">
+                                Add Asset
+                            </MudButton>
+                            <MudButton Variant="Variant.Outlined" 
+                                     Color="Color.Primary" 
+                                     StartIcon="@Icons.Material.Filled.Analytics"
+                                     FullWidth="true">
+                                View Reports
+                            </MudButton>
+                        </MudStack>
+                    </MudCardContent>
+                </MudCard>
+            </MudItem>
+        </MudGrid>
+    }
+    else
+    {
+        <MudAlert Severity="Severity.Warning" Class="mb-4">
+            You need to be logged in to access the dashboard.
+        </MudAlert>
+        <MudButton Href="/login" Variant="Variant.Filled" Color="Color.Primary">
+            Go to Login
+        </MudButton>
+    }
+</MudContainer>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        // Subscribe to authentication state changes
+        AuthService.AuthenticationStateChanged += OnAuthenticationStateChanged;
+        
+        // Check authentication status
+        await CheckAuthenticationAsync();
+    }
+
+    private async Task CheckAuthenticationAsync()
+    {
+        if (!AuthService.IsAuthenticated)
+        {
+            Navigation.NavigateTo("/login");
+        }
+        else
+        {
+            StateHasChanged();
+        }
+    }
+
+    private void OnAuthenticationStateChanged(System.Security.Claims.ClaimsPrincipal? user)
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        AuthService.AuthenticationStateChanged -= OnAuthenticationStateChanged;
+    }
+}

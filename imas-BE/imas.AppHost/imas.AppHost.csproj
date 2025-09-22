@@ -11,7 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\imas.ApiService\imas.ApiService.csproj" />
-    <ProjectReference Include="..\..\imas-FE\imas.Web\imas.Web.csproj" />
+    <ProjectReference Include="..\..\imas-FE\imas.web3\imas.web3.csproj" />
     <ProjectReference Include="..\imas.HR.ApiService\imas.HR.ApiService.csproj" />
     <ProjectReference Include="..\imas.Assets.ApiService\imas.Assets.ApiService.csproj" />
     <ProjectReference Include="..\imas.Finance.ApiService\imas.Finance.ApiService.csproj" />

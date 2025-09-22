@@ -1,0 +1,555 @@
+@page "/login"
+@using MudBlazor
+@using MudBlazor.Components
+@using imas.Web3.Services
+@inject NavigationManager Navigation
+@inject ISnackbar Snackbar
+@inject AuthenticationService AuthService
+
+<PageTitle>IMAS Login - Majlis Amanah Rakyat ERP</PageTitle>
+
+<div class="login-container">
+    <!-- Left Side - ERP Background -->
+    <div class="login-background">
+        <div class="background-overlay">
+            <div class="erp-content">
+                <!-- Top Row of Icons -->
+                <div class="icon-row top-row">
+                    <div class="erp-icon">
+                        <MudIcon Icon="@Icons.Material.Filled.BarChart" />
+                    </div>
+                    <div class="erp-icon">
+                        <MudIcon Icon="@Icons.Material.Filled.Schedule" />
+                    </div>
+                    <div class="erp-icon">
+                        <MudIcon Icon="@Icons.Material.Filled.Computer" />
+                    </div>
+                </div>
+                
+                <!-- Center ERP Text -->
+                <div class="erp-text">
+                    <h1>ERP</h1>
+                </div>
+                
+                <!-- Bottom Row of Icons -->
+                <div class="icon-row bottom-row">
+                    <div class="erp-icon">
+                        <MudIcon Icon="@Icons.Material.Filled.ShoppingCart" />
+                    </div>
+                    <div class="erp-icon">
+                        <MudIcon Icon="@Icons.Material.Filled.Calculate" />
+                    </div>
+                    <div class="erp-icon">
+                        <MudIcon Icon="@Icons.Material.Filled.Assessment" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Right Side - Login Form -->
+    <div class="login-form-section">
+        <div class="login-form-container">
+            <MudPaper Class="login-paper" Elevation="0">
+                <!-- Header with Logo -->
+                <div class="login-header">
+                    <div class="logo-section">
+                        <MudIcon Icon="@Icons.Material.Filled.AccountBalance" 
+                               Size="Size.Large" 
+                               Color="Color.Default" 
+                               Class="logo-icon" />
+                        <div class="logo-text">
+                            <MudText Typo="Typo.h4" Class="imas-title">IMAS</MudText>
+                            <MudText Typo="Typo.body2" Class="system-subtitle">MARA ERP System</MudText>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Login Form -->
+                <MudForm @ref="loginForm" Class="login-form">
+                    <div class="form-fields">
+                        <!-- Username Field -->
+                        <div class="form-group">
+                            <MudText Typo="Typo.body2" Class="field-label">Nama Pengguna</MudText>
+                            <MudTextField @bind-Value="loginModel.Username"
+                                        Variant="Variant.Outlined"
+                                        Required="true"
+                                        RequiredError="Nama pengguna diperlukan"
+                                        Class="login-input"
+                                        FullWidth="true" />
+                        </div>
+                        
+                        <!-- Password Field -->
+                        <div class="form-group">
+                            <MudText Typo="Typo.body2" Class="field-label">Kata Laluan</MudText>
+                            <MudTextField @bind-Value="loginModel.Password"
+                                        InputType="InputType.Password"
+                                        Variant="Variant.Outlined"
+                                        Required="true"
+                                        RequiredError="Kata laluan diperlukan"
+                                        Class="login-input"
+                                        FullWidth="true" />
+                        </div>
+                        
+                        <!-- Helper Links -->
+                        <div class="form-links">
+                            <MudLink Href="/register" Color="Color.Primary" Class="helper-link">
+                                Daftar Pengguna
+                            </MudLink>
+                            <MudLink Href="/forgot-password" Color="Color.Primary" Class="helper-link">
+                                Lupa Kata Laluan
+                            </MudLink>
+                        </div>
+                        
+                        <!-- reCAPTCHA -->
+                        <div class="recaptcha-section">
+                            <div class="recaptcha-box">
+                                <MudCheckBox @bind-Value="loginModel.IsNotRobot" 
+                                           Color="Color.Primary"
+                                           Class="recaptcha-checkbox" />
+                                <MudText Typo="Typo.body2" Class="recaptcha-text">I'm not a robot</MudText>
+                                <div class="recaptcha-logo">
+                                    <MudText Typo="Typo.caption" Color="Color.Secondary">reCAPTCHA</MudText>
+                                    <MudText Typo="Typo.caption" Color="Color.Secondary">Privacy - Terms</MudText>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Login Button -->
+                        <MudButton FullWidth="true" 
+                                 Variant="Variant.Filled" 
+                                 Color="Color.Primary"
+                                 Size="Size.Large"
+                                 Class="login-button"
+                                 OnClick="HandleLogin"
+                                 Disabled="isLoggingIn">
+                            @if (isLoggingIn)
+                            {
+                                <MudProgressCircular Size="Size.Small" Indeterminate="true" />
+                                <span class="ml-2">LOG MASUK...</span>
+                            }
+                            else
+                            {
+                                <span>LOG MASUK</span>
+                            }
+                        </MudButton>
+                    </div>
+                </MudForm>
+            </MudPaper>
+        </div>
+    </div>
+</div>
+
+@code {
+    private MudForm loginForm = new();
+    private LoginModel loginModel = new();
+    private bool isLoggingIn = false;
+
+    public class LoginModel
+    {
+        public string Username { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+        public bool IsNotRobot { get; set; } = false;
+    }
+
+    private async Task HandleLogin()
+    {
+        await loginForm.Validate();
+        
+        if (loginForm.IsValid && loginModel.IsNotRobot)
+        {
+            isLoggingIn = true;
+            StateHasChanged();
+            
+            try
+            {
+                var loginSuccess = await AuthService.LoginAsync(loginModel.Username, loginModel.Password);
+                
+                if (loginSuccess)
+                {
+                    Snackbar.Add($"Welcome, {loginModel.Username}!", Severity.Success);
+                    
+                    // Small delay to show the success message
+                    await Task.Delay(1000);
+                    
+                    // Navigate to dashboard
+                    Navigation.NavigateTo("/dashboard");
+                }
+                else
+                {
+                    Snackbar.Add("Invalid username or password", Severity.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                Snackbar.Add($"Login failed: {ex.Message}", Severity.Error);
+            }
+            finally
+            {
+                isLoggingIn = false;
+                StateHasChanged();
+            }
+        }
+        else if (!loginModel.IsNotRobot)
+        {
+            Snackbar.Add("Please verify that you are not a robot", Severity.Warning);
+        }
+        else
+        {
+            Snackbar.Add("Please fill in all required fields", Severity.Warning);
+        }
+    }
+}
+
+<style>
+    .login-container {
+        display: flex;
+        min-height: 100vh;
+        font-family: 'Roboto', sans-serif;
+    }
+
+    /* Left Side - ERP Background */
+    .login-background {
+        flex: 1;
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+    .background-overlay {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .erp-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 40px;
+    }
+
+    .icon-row {
+        display: flex;
+        gap: 25px;
+        align-items: center;
+    }
+
+    .erp-icon {
+        width: 60px;
+        height: 60px;
+        background: rgba(255, 255, 255, 0.15);
+        border: 2px solid rgba(255, 255, 255, 0.25);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+        animation: float 6s ease-in-out infinite;
+    }
+
+    .erp-icon:nth-child(1) { animation-delay: 0s; }
+    .erp-icon:nth-child(2) { animation-delay: 2s; }
+    .erp-icon:nth-child(3) { animation-delay: 4s; }
+
+    .erp-icon .mud-icon {
+        font-size: 1.8rem !important;
+    }
+
+    .erp-icon:hover {
+        background: rgba(255, 255, 255, 0.25);
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .erp-text {
+        text-align: center;
+    }
+
+    .erp-text h1 {
+        font-size: 4rem;
+        font-weight: 900;
+        color: rgba(255, 255, 255, 0.9);
+        text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        margin: 0;
+        letter-spacing: 0.2em;
+        background: linear-gradient(45deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.6));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    @@keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-20px); }
+    }
+
+    /* Right Side - Login Form */
+    .login-form-section {
+        flex: 0 0 420px;
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 30px;
+        box-shadow: -5px 0 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .login-form-container {
+        width: 100%;
+        max-width: 360px;
+    }
+
+    .login-paper {
+        background: transparent !important;
+        box-shadow: none !important;
+    }
+
+    /* Header Section */
+    .login-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .logo-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .logo-icon {
+        font-size: 2.5rem !important;
+        color: #1976d2 !important;
+    }
+
+    .logo-text {
+        text-align: center;
+    }
+
+    .imas-title {
+        font-weight: 700 !important;
+        color: #1976d2 !important;
+        margin-bottom: 4px !important;
+        font-size: 1.8rem !important;
+    }
+
+    .system-subtitle {
+        color: #666 !important;
+        font-size: 0.9rem !important;
+    }
+
+    /* Form Styles */
+    .login-form {
+        width: 100%;
+    }
+
+    .form-fields {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    .form-group {
+        width: 100%;
+    }
+
+    .field-label {
+        margin-bottom: 6px !important;
+        font-weight: 500 !important;
+        color: #333 !important;
+        display: block;
+        font-size: 0.9rem !important;
+    }
+
+    .login-input {
+        width: 100%;
+    }
+
+    /* Override MudBlazor input field height */
+    .login-input .mud-input-root {
+        min-height: 42px !important;
+    }
+
+    .login-input .mud-input {
+        padding: 10px 14px !important;
+        font-size: 0.95rem !important;
+    }
+
+    /* Helper Links */
+    .form-links {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 12px 0;
+    }
+
+    .helper-link {
+        font-size: 0.85rem;
+        text-decoration: none !important;
+    }
+
+    .helper-link:hover {
+        text-decoration: underline !important;
+    }
+
+    /* reCAPTCHA Section */
+    .recaptcha-section {
+        margin: 16px 0;
+    }
+
+    .recaptcha-box {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        background: #f9f9f9;
+        gap: 10px;
+    }
+
+    .recaptcha-checkbox {
+        margin: 0 !important;
+    }
+
+    .recaptcha-text {
+        flex: 1;
+        margin: 0 !important;
+        color: #333 !important;
+        font-size: 0.9rem !important;
+    }
+
+    .recaptcha-logo {
+        text-align: right;
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+    }
+
+    .recaptcha-logo .mud-typography {
+        font-size: 0.75rem !important;
+    }
+
+    /* Login Button */
+    .login-button {
+        height: 44px !important;
+        font-weight: 600 !important;
+        font-size: 0.9rem !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+        border-radius: 6px !important;
+        background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%) !important;
+        transition: all 0.3s ease !important;
+        margin-top: 8px;
+    }
+
+    .login-button:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(25, 118, 210, 0.3) !important;
+    }
+
+    .login-button:disabled {
+        opacity: 0.7 !important;
+    }
+
+    /* Responsive Design */
+    @@media (max-width: 768px) {
+        .login-container {
+            flex-direction: column;
+        }
+        
+        .login-background {
+            flex: 0 0 280px;
+        }
+        
+        .login-form-section {
+            flex: 1;
+            padding: 20px;
+        }
+        
+        .erp-content {
+            gap: 25px;
+        }
+        
+        .icon-row {
+            gap: 15px;
+        }
+        
+        .erp-icon {
+            width: 45px;
+            height: 45px;
+        }
+        
+        .erp-icon .mud-icon {
+            font-size: 1.3rem !important;
+        }
+        
+        .erp-text h1 {
+            font-size: 2.8rem;
+        }
+        
+        .login-form-section {
+            flex: 0 0 auto;
+        }
+
+        .login-form-container {
+            max-width: 320px;
+        }
+    }
+
+    @@media (max-width: 480px) {
+        .login-form-section {
+            padding: 15px;
+        }
+        
+        .erp-content {
+            gap: 20px;
+        }
+        
+        .icon-row {
+            gap: 12px;
+        }
+        
+        .erp-icon {
+            width: 40px;
+            height: 40px;
+        }
+        
+        .erp-icon .mud-icon {
+            font-size: 1.1rem !important;
+        }
+        
+        .erp-text h1 {
+            font-size: 2.2rem;
+        }
+        
+        .form-links {
+            flex-direction: column;
+            gap: 8px;
+            text-align: center;
+        }
+
+        .login-form-container {
+            max-width: 300px;
+        }
+
+        .login-header {
+            margin-bottom: 25px;
+        }
+
+        .form-fields {
+            gap: 16px;
+        }
+    }
+</style>

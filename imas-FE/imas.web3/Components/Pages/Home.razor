@@ -1,0 +1,193 @@
+﻿@page "/home"
+@namespace imas.Web3
+@using imas.Web3.Services
+@using MudBlazor
+@using Microsoft.AspNetCore.Components.Web
+@using System.Security.Claims
+@inject AuthenticationService AuthService
+@inject NavigationManager Navigation
+
+<PageTitle>IMAS Dashboard</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-4">
+    <MudGrid>
+        <MudItem xs="12">
+            <MudText Typo="Typo.h4" Class="mb-4">Dashboard</MudText>
+        </MudItem>
+        
+        @if (AuthService.IsAuthenticated)
+        {
+            <MudItem xs="12">
+                <MudText Typo="Typo.h6" Class="mb-3">Welcome, @(AuthService.CurrentUser?.Identity?.Name ?? "User")!</MudText>
+            </MudItem>
+            
+            <!-- Module Cards -->
+            <MudItem xs="12" sm="6" md="3">
+                <MudCard Class="dashboard-card">
+                    <MudCardContent>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <MudIcon Icon="@Icons.Material.Filled.People" Color="Color.Primary" Size="Size.Large" />
+                            <div>
+                                <MudText Typo="Typo.h6">HR Management</MudText>
+                                <MudText Typo="Typo.body2" Color="Color.Secondary">Employee data and payroll</MudText>
+                            </div>
+                        </div>
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudButton Size="Size.Small" Color="Color.Primary">View Details</MudButton>
+                    </MudCardActions>
+                </MudCard>
+            </MudItem>
+            
+            <MudItem xs="12" sm="6" md="3">
+                <MudCard Class="dashboard-card">
+                    <MudCardContent>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <MudIcon Icon="@Icons.Material.Filled.AccountBalance" Color="Color.Success" Size="Size.Large" />
+                            <div>
+                                <MudText Typo="Typo.h6">Finance</MudText>
+                                <MudText Typo="Typo.body2" Color="Color.Secondary">Financial reporting and budgets</MudText>
+                            </div>
+                        </div>
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudButton Size="Size.Small" Color="Color.Success">View Details</MudButton>
+                    </MudCardActions>
+                </MudCard>
+            </MudItem>
+            
+            <MudItem xs="12" sm="6" md="3">
+                <MudCard Class="dashboard-card">
+                    <MudCardContent>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <MudIcon Icon="@Icons.Material.Filled.Business" Color="Color.Warning" Size="Size.Large" />
+                            <div>
+                                <MudText Typo="Typo.h6">Assets</MudText>
+                                <MudText Typo="Typo.body2" Color="Color.Secondary">Asset tracking and management</MudText>
+                            </div>
+                        </div>
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudButton Size="Size.Small" Color="Color.Warning">View Details</MudButton>
+                    </MudCardActions>
+                </MudCard>
+            </MudItem>
+            
+            <MudItem xs="12" sm="6" md="3">
+                <MudCard Class="dashboard-card">
+                    <MudCardContent>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <MudIcon Icon="@Icons.Material.Filled.Settings" Color="Color.Info" Size="Size.Large" />
+                            <div>
+                                <MudText Typo="Typo.h6">General</MudText>
+                                <MudText Typo="Typo.body2" Color="Color.Secondary">System configuration</MudText>
+                            </div>
+                        </div>
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudButton Size="Size.Small" Color="Color.Info">View Details</MudButton>
+                    </MudCardActions>
+                </MudCard>
+            </MudItem>
+            
+            <!-- Quick Actions -->
+            <MudItem xs="12" Class="mt-4">
+                <MudText Typo="Typo.h6" Class="mb-3">Quick Actions</MudText>
+            </MudItem>
+            
+            <MudItem xs="12" sm="6" md="4">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth StartIcon="@Icons.Material.Filled.PersonAdd">
+                    Add Employee
+                </MudButton>
+            </MudItem>
+            
+            <MudItem xs="12" sm="6" md="4">
+                <MudButton Variant="Variant.Filled" Color="Color.Success" FullWidth StartIcon="@Icons.Material.Filled.Receipt">
+                    Create Invoice
+                </MudButton>
+            </MudItem>
+            
+            <MudItem xs="12" sm="6" md="4">
+                <MudButton Variant="Variant.Filled" Color="Color.Warning" FullWidth StartIcon="@Icons.Material.Filled.Inventory">
+                    Track Asset
+                </MudButton>
+            </MudItem>
+            
+            <!-- Recent Activities -->
+            <MudItem xs="12" Class="mt-4">
+                <MudText Typo="Typo.h6" Class="mb-3">Recent Activities</MudText>
+            </MudItem>
+            
+            <MudItem xs="12">
+                <MudPaper Class="pa-4">
+                    <MudList T="string">
+                        <MudListItem T="string" Text="Employee John Doe added to HR system" 
+                                    SecondaryText="2 hours ago" 
+                                    Icon="@Icons.Material.Filled.PersonAdd" 
+                                    IconColor="Color.Primary" />
+                        <MudDivider />
+                        <MudListItem T="string" Text="Monthly financial report generated" 
+                                    SecondaryText="4 hours ago" 
+                                    Icon="@Icons.Material.Filled.Description" 
+                                    IconColor="Color.Success" />
+                        <MudDivider />
+                        <MudListItem T="string" Text="New asset registered: Laptop Dell XPS" 
+                                    SecondaryText="1 day ago" 
+                                    Icon="@Icons.Material.Filled.Computer" 
+                                    IconColor="Color.Warning" />
+                    </MudList>
+                </MudPaper>
+            </MudItem>
+        }
+        else
+        {
+            <MudItem xs="12">
+                <MudAlert Severity="Severity.Warning">
+                    You are not authenticated. Please login to access the dashboard.
+                </MudAlert>
+            </MudItem>
+        }
+        
+        <!-- Debug Info (Show only in development) -->
+        <MudItem xs="12" Class="mt-4">
+            <MudPaper Class="pa-4" Style="background-color: #f5f5f5;">
+                <MudText Typo="Typo.h6">Authentication Debug Info:</MudText>
+                <MudText><strong>Is Authenticated:</strong> @AuthService.IsAuthenticated</MudText>
+                <MudText><strong>Current User:</strong> @(AuthService.CurrentUser?.Identity?.Name ?? "None")</MudText>
+                <MudText><strong>User Identity Type:</strong> @(AuthService.CurrentUser?.Identity?.AuthenticationType ?? "None")</MudText>
+                <MudText><strong>Is Identity Authenticated:</strong> @(AuthService.CurrentUser?.Identity?.IsAuthenticated ?? false)</MudText>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+</MudContainer>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            // Initialize authentication service first
+            await AuthService.InitializeAsync();
+            
+            // Debug: Log authentication state
+            Console.WriteLine($"Home.razor - IsAuthenticated: {AuthService.IsAuthenticated}");
+            Console.WriteLine($"Home.razor - CurrentUser: {AuthService.CurrentUser?.Identity?.Name}");
+            
+            // Only redirect if not authenticated
+            if (!AuthService.IsAuthenticated)
+            {
+                Console.WriteLine("User not authenticated, redirecting to login");
+                Navigation.NavigateTo("/");
+                return;
+            }
+            
+            Console.WriteLine("User authenticated, staying on home page");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error in Home.razor OnInitializedAsync: {ex.Message}");
+        }
+        
+        await Task.CompletedTask;
+    }
+}

@@ -1,0 +1,19 @@
+@page "/simple-dashboard"
+@namespace imas.Web3
+
+<h1>IMAS Dashboard</h1>
+<p>Welcome to the IMAS ERP System</p>
+
+<div>
+    <h3>System Status</h3>
+    <p>Application is running successfully.</p>
+    <p>Current time: @DateTime.Now</p>
+</div>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        // Simple initialization without authentication checks for now
+        await Task.CompletedTask;
+    }
+}

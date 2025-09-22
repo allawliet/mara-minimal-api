@@ -1,0 +1,67 @@
+@inject ThemeService ThemeService
+
+<MudAppBar Elevation="1" Dense="true" Class="mud-appbar">
+    <MudIconButton Icon="@Icons.Material.Filled.Menu" 
+                   Color="Color.Inherit" 
+                   Edge="Edge.Start" 
+                   OnClick="@OnMenuClick" />
+    
+    <MudText Typo="Typo.h6" Class="ml-3">IMAS Dashboard</MudText>
+    
+    <MudSpacer />
+    
+    <MudTooltip Text="@(ThemeService.CurrentTheme.IsDark ? "Switch to Light Mode" : "Switch to Dark Mode")">
+        <MudIconButton Icon="@(ThemeService.CurrentTheme.IsDark ? Icons.Material.Filled.LightMode : Icons.Material.Filled.DarkMode)"
+                       Color="Color.Inherit"
+                       OnClick="@OnThemeToggle" />
+    </MudTooltip>
+    
+    <MudMenu Icon="@Icons.Material.Filled.AccountCircle" 
+             Color="Color.Inherit" 
+             Direction="Origin.BottomLeft"
+             OffsetX="true">
+        <MudMenuItem>
+            <div class="d-flex align-center">
+                <MudIcon Icon="@Icons.Material.Filled.Person" class="mr-2" />
+                <MudText>Profile</MudText>
+            </div>
+        </MudMenuItem>
+        <MudMenuItem>
+            <div class="d-flex align-center">
+                <MudIcon Icon="@Icons.Material.Filled.Settings" class="mr-2" />
+                <MudText>Settings</MudText>
+            </div>
+        </MudMenuItem>
+        <MudDivider />
+        <MudMenuItem>
+            <div class="d-flex align-center">
+                <MudIcon Icon="@Icons.Material.Filled.Logout" class="mr-2" />
+                <MudText>Logout</MudText>
+            </div>
+        </MudMenuItem>
+    </MudMenu>
+</MudAppBar>
+
+@code {
+    [Parameter] public EventCallback OnMenuClick { get; set; }
+    
+    private async Task OnThemeToggle()
+    {
+        ThemeService.ToggleTheme();
+        await Task.CompletedTask;
+    }
+}
+
+<style>
+    .mud-appbar {
+        background: var(--app-color-primary) !important;
+        color: var(--app-color-primary-contrast) !important;
+        height: var(--app-navbar-height);
+        box-shadow: var(--app-shadow-2);
+    }
+    
+    .mud-appbar .mud-typography-h6 {
+        font-weight: 600;
+        letter-spacing: 0.5px;
+    }
+</style>

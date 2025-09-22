@@ -1,0 +1,118 @@
+:root {
+    /* Primary Color Palette */
+    --app-color-primary: #1976d2;
+    --app-color-primary-light: #42a5f5;
+    --app-color-primary-dark: #1565c0;
+    --app-color-primary-contrast: #ffffff;
+    
+    /* Secondary Color Palette */
+    --app-color-secondary: #dc004e;
+    --app-color-secondary-light: #f5005c;
+    --app-color-secondary-dark: #c30030;
+    --app-color-secondary-contrast: #ffffff;
+    
+    /* Surface Colors */
+    --app-color-surface: #ffffff;
+    --app-color-surface-variant: #f5f5f5;
+    --app-color-background: #fafafa;
+    --app-color-on-surface: #212121;
+    --app-color-on-background: #212121;
+    
+    /* Accent Colors */
+    --app-color-success: #4caf50;
+    --app-color-warning: #ff9800;
+    --app-color-error: #f44336;
+    --app-color-info: #2196f3;
+    
+    /* Typography */
+    --app-font-family-primary: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --app-font-family-mono: 'Consolas', 'Monaco', 'Courier New', monospace;
+    
+    --app-font-size-h1: 2.125rem;
+    --app-font-size-h2: 1.5rem;
+    --app-font-size-h3: 1.25rem;
+    --app-font-size-h4: 1.125rem;
+    --app-font-size-h5: 1rem;
+    --app-font-size-h6: 0.875rem;
+    --app-font-size-body1: 1rem;
+    --app-font-size-body2: 0.875rem;
+    --app-font-size-caption: 0.75rem;
+    
+    /* Spacing System */
+    --app-spacing-xs: 0.25rem;
+    --app-spacing-sm: 0.5rem;
+    --app-spacing-md: 1rem;
+    --app-spacing-lg: 1.5rem;
+    --app-spacing-xl: 2rem;
+    --app-spacing-xxl: 3rem;
+    
+    /* Border Radius */
+    --app-border-radius-sm: 4px;
+    --app-border-radius-md: 8px;
+    --app-border-radius-lg: 12px;
+    --app-border-radius-xl: 16px;
+    
+    /* Shadows */
+    --app-shadow-1: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    --app-shadow-2: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    --app-shadow-3: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+    --app-shadow-4: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+    --app-shadow-5: 0 19px 38px rgba(0, 0, 0, 0.30), 0 15px 12px rgba(0, 0, 0, 0.22);
+    
+    /* Layout */
+    --app-navbar-height: 64px;
+    --app-sidebar-width: 256px;
+    --app-sidebar-mini-width: 72px;
+    
+    /* Transitions */
+    --app-transition-duration-fast: 150ms;
+    --app-transition-duration-medium: 300ms;
+    --app-transition-duration-slow: 500ms;
+    --app-transition-easing: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Dark Theme Overrides */
+[data-theme="dark"] {
+    --app-color-surface: #121212;
+    --app-color-surface-variant: #1e1e1e;
+    --app-color-background: #000000;
+    --app-color-on-surface: #ffffff;
+    --app-color-on-background: #ffffff;
+    
+    --app-color-primary: #90caf9;
+    --app-color-primary-light: #bbdefb;
+    --app-color-primary-dark: #64b5f6;
+    
+    --app-color-secondary: #f48fb1;
+    --app-color-secondary-light: #f8bbd9;
+    --app-color-secondary-dark: #f06292;
+}
+
+/* Apply tokens to common elements */
+body {
+    font-family: var(--app-font-family-primary);
+    background-color: var(--app-color-background);
+    color: var(--app-color-on-background);
+    transition: background-color var(--app-transition-duration-medium) var(--app-transition-easing),
+                color var(--app-transition-duration-medium) var(--app-transition-easing);
+}
+
+h1 { font-size: var(--app-font-size-h1); }
+h2 { font-size: var(--app-font-size-h2); }
+h3 { font-size: var(--app-font-size-h3); }
+h4 { font-size: var(--app-font-size-h4); }
+h5 { font-size: var(--app-font-size-h5); }
+h6 { font-size: var(--app-font-size-h6); }
+
+.app-spacing-xs { margin: var(--app-spacing-xs); }
+.app-spacing-sm { margin: var(--app-spacing-sm); }
+.app-spacing-md { margin: var(--app-spacing-md); }
+.app-spacing-lg { margin: var(--app-spacing-lg); }
+.app-spacing-xl { margin: var(--app-spacing-xl); }
+.app-spacing-xxl { margin: var(--app-spacing-xxl); }
+
+.app-shadow-1 { box-shadow: var(--app-shadow-1); }
+.app-shadow-2 { box-shadow: var(--app-shadow-2); }
+.app-shadow-3 { box-shadow: var(--app-shadow-3); }
+.app-shadow-4 { box-shadow: var(--app-shadow-4); }
+.app-shadow-5 { box-shadow: var(--app-shadow-5); }

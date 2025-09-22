@@ -29,10 +29,10 @@ var apiService = builder.AddProject<Projects.imas_ApiService>("api-gateway")
     .WithReference(assetsService)
     .WithReference(financeService);
 
-// Web frontend
-builder.AddProject<Projects.imas_Web>("web-frontend")
-    .WithHttpsEndpoint(port: 7205, name: "web-https")
-    .WithHttpEndpoint(port: 7305, name: "web-http")
+// Web frontend (Blazor WebAssembly)
+builder.AddProject<Projects.imas_web3>("web3-frontend")
+    .WithHttpsEndpoint(port: 7206, name: "web3-https")
+    .WithHttpEndpoint(port: 7306, name: "web3-http")
     .WithExternalHttpEndpoints()
     .WithReference(apiService);
 

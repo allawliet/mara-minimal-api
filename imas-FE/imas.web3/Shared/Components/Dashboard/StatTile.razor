@@ -1,0 +1,131 @@
+<div class="stat-tile" style="@Style">
+    <div class="stat-tile-content">
+        <div class="stat-tile-icon">
+            <MudIcon Icon="@Icon" Size="Size.Large" Color="@IconColor" />
+        </div>
+        <div class="stat-tile-text">
+            <h3 class="stat-tile-value">@Value</h3>
+            <p class="stat-tile-label">@Label</p>
+            @if (!string.IsNullOrEmpty(SubLabel))
+            {
+                <p class="stat-tile-sublabel">@SubLabel</p>
+            }
+        </div>
+    </div>
+    
+    @if (ShowTrend && TrendValue.HasValue)
+    {
+        <div class="stat-tile-trend">
+            <MudIcon Icon="@GetTrendIcon()" 
+                     Size="Size.Small" 
+                     Color="@GetTrendColor()" />
+            <span class="trend-value" style="color: @GetTrendColorValue()">
+                @($"{(TrendValue > 0 ? "+" : "")}{TrendValue:F1}%")
+            </span>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public string Value { get; set; } = string.Empty;
+    [Parameter] public string Label { get; set; } = string.Empty;
+    [Parameter] public string? SubLabel { get; set; }
+    [Parameter] public string Icon { get; set; } = Icons.Material.Filled.Analytics;
+    [Parameter] public Color IconColor { get; set; } = Color.Primary;
+    [Parameter] public bool ShowTrend { get; set; } = false;
+    [Parameter] public double? TrendValue { get; set; }
+    [Parameter] public string? Style { get; set; }
+    
+    private string GetTrendIcon()
+    {
+        if (!TrendValue.HasValue) return Icons.Material.Filled.TrendingFlat;
+        return TrendValue > 0 ? Icons.Material.Filled.TrendingUp : Icons.Material.Filled.TrendingDown;
+    }
+    
+    private Color GetTrendColor()
+    {
+        if (!TrendValue.HasValue) return Color.Default;
+        return TrendValue > 0 ? Color.Success : Color.Error;
+    }
+    
+    private string GetTrendColorValue()
+    {
+        if (!TrendValue.HasValue) return "var(--app-color-on-surface)";
+        return TrendValue > 0 ? "var(--app-color-success)" : "var(--app-color-error)";
+    }
+}
+
+<style>
+    .stat-tile {
+        background: var(--app-color-surface);
+        border-radius: var(--app-border-radius-lg);
+        padding: var(--app-spacing-lg);
+        box-shadow: var(--app-shadow-1);
+        border: 1px solid var(--app-color-surface-variant);
+        transition: all var(--app-transition-duration-medium) var(--app-transition-easing);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    
+    .stat-tile:hover {
+        box-shadow: var(--app-shadow-2);
+        transform: translateY(-2px);
+    }
+    
+    .stat-tile-content {
+        display: flex;
+        align-items: flex-start;
+        gap: var(--app-spacing-md);
+    }
+    
+    .stat-tile-icon {
+        flex-shrink: 0;
+        padding: var(--app-spacing-sm);
+        border-radius: var(--app-border-radius-md);
+        background: var(--app-color-surface-variant);
+    }
+    
+    .stat-tile-text {
+        flex: 1;
+        min-width: 0;
+    }
+    
+    .stat-tile-value {
+        font-size: var(--app-font-size-h2);
+        font-weight: 700;
+        margin: 0 0 var(--app-spacing-xs) 0;
+        color: var(--app-color-on-surface);
+        line-height: 1.2;
+    }
+    
+    .stat-tile-label {
+        font-size: var(--app-font-size-body1);
+        font-weight: 500;
+        margin: 0;
+        color: var(--app-color-on-surface);
+        opacity: 0.8;
+    }
+    
+    .stat-tile-sublabel {
+        font-size: var(--app-font-size-body2);
+        margin: var(--app-spacing-xs) 0 0 0;
+        color: var(--app-color-on-surface);
+        opacity: 0.6;
+    }
+    
+    .stat-tile-trend {
+        display: flex;
+        align-items: center;
+        gap: var(--app-spacing-xs);
+        margin-top: var(--app-spacing-md);
+        padding-top: var(--app-spacing-md);
+        border-top: 1px solid var(--app-color-surface-variant);
+    }
+    
+    .trend-value {
+        font-size: var(--app-font-size-body2);
+        font-weight: 600;
+    }
+</style>
